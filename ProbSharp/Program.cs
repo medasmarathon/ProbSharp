@@ -1,3 +1,7 @@
+using App.Entities;
+using App.Operations;
+using App.Operations.Interfaces;
+using App.Operations.Requests;
 using Microsoft.EntityFrameworkCore;
 using ProbSharp.Persistence;
 
@@ -12,33 +16,12 @@ builder.Services.AddDbContext<ProbSharpContext>(options =>
         options.UseNpgsql(builder.Configuration.GetConnectionString("ProbSharp"), b => b.MigrationsAssembly("ProbSharp"));
 });
 
+builder.Services.AddTransient<IRequestHandler<AddSampleSpaceRequest, SampleSpace>, AddSampleSpaceHandler>();
+builder.Services.AddTransient<IRequestHandler<AddOutcomeRequest, Outcome>, AddOutcomeHandler>();
+builder.Services.AddTransient<IRequestHandler<AddPEventRequest, PEvent>, AddPEventHandler>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 
 app.UseHttpsRedirection();
-
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-});
-
-app.Run();
-
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

@@ -6,4 +6,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ProbSharp.Persistence\ProbSharp.Persistence.csproj" />
+  </ItemGroup>
 </Project>
