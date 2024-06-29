@@ -1,5 +1,6 @@
 using App.Entities;
 using App.Operations;
+using App.Operations.Factories;
 using App.Operations.Interfaces;
 using App.Operations.Requests;
 using Microsoft.EntityFrameworkCore;
@@ -16,12 +17,23 @@ builder.Services.AddDbContext<ProbSharpContext>(options =>
         options.UseNpgsql(builder.Configuration.GetConnectionString("ProbSharp"), b => b.MigrationsAssembly("ProbSharp"));
 });
 
-builder.Services.AddTransient<IRequestHandler<AddSampleSpaceRequest, SampleSpace>, AddSampleSpaceHandler>();
-builder.Services.AddTransient<IRequestHandler<AddOutcomeRequest, Outcome>, AddOutcomeHandler>();
-builder.Services.AddTransient<IRequestHandler<AddPEventRequest, PEvent>, AddPEventHandler>();
+builder.Services
+    .AddTransient<IRequestHandler<AddSampleSpaceRequest, SampleSpace>, AddSampleSpaceHandler>()
+    .AddTransient<IRequestHandler<AddOutcomeRequest, Outcome>, AddOutcomeHandler>()
+    .AddTransient<IRequestHandler<AddPEventRequest, PEvent>, AddPEventHandler>();
+
+builder.Services
+    .AddTransient<NodeFactory>()
+    .AddTransient<RelationshipFactory>();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 
 app.UseHttpsRedirection();
+
+var scope = app.Services.CreateScope();
+var ssRequest = scope.ServiceProvider.GetRequiredService<IRequestHandler<AddSampleSpaceRequest, SampleSpace>>();
+var outcomeRequest = scope.ServiceProvider.GetRequiredService<IRequestHandler<AddOutcomeRequest, Outcome>>();
+var ss = await ssRequest.Handle(new AddSampleSpaceRequest { Name = "Sample SS" });
+var outcome = await outcomeRequest.Handle(new AddOutcomeRequest { Name = "Sample Outcome", SampleSpaceId = ss.Id });
