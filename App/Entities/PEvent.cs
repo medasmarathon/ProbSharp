@@ -5,7 +5,7 @@ public class PEvent
     public long Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public PEventType Type { get; set; }
-    public decimal Probability { get; set; }
+    public decimal? Probability { get; set; }
 }
 
 public enum PEventType
