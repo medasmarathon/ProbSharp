@@ -11,20 +11,20 @@ namespace App.Tests.AddOutcome;
 
 public class TestAddOutcome : BaseDatabaseTest
 {
-    private readonly IServiceProvider services;
     public TestAddOutcome() : base()
-    {
+    { 
         serviceCollection.RegisterProbSharpApp();
-        services = serviceCollection.BuildServiceProvider();
     }
 
     [Fact]
     public async Task AddOutcome_Should_BeSuccessful()
     {
+        var services = serviceCollection.BuildServiceProvider();
         using var scope = services.CreateScope();
+        using var dbContext = scope.ServiceProvider.GetRequiredService<ProbSharpContext>();
+        dbContext.Database.EnsureCreated();
         var ssRequest = scope.ServiceProvider.GetRequiredService<IRequestHandler<AddSampleSpaceRequest, SampleSpace>>();
         var outcomeRequest = scope.ServiceProvider.GetRequiredService<IRequestHandler<AddOutcomeRequest, Outcome>>();
-        var dbContext = scope.ServiceProvider.GetRequiredService<ProbSharpContext>();
 
 
         var ss = await ssRequest.Handle(new AddSampleSpaceRequest { Name = "Sample SS" });

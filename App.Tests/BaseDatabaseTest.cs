@@ -10,8 +10,10 @@ namespace App.Tests
         public BaseDatabaseTest()
         {
             serviceCollection = new ServiceCollection();
-            serviceCollection.AddDbContext<ProbSharpContext>(options =>
-                options.UseSqlite($"Data Source={this.GetType().Name};Mode=Memory", builder => builder.MigrationsAssembly("App.Tests"))
+            serviceCollection.AddDbContext<ProbSharpContext>(
+                options =>
+                    options.UseSqlite($"DataSource=.\\{this.GetType().Name}"),
+                ServiceLifetime.Singleton
             );
         }
     }
