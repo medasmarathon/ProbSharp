@@ -2,10 +2,14 @@
 
 namespace ProbSharp.Persistence
 {
-    public class ProbSharpContext(DbContextOptions<ProbSharpContext> options) : DbContext(options)
+    public class ProbSharpContext : DbContext
     {
         public DbSet<Node> Nodes { get; set; }
         public DbSet<Relationship> Relationships { get; set; }
+        public ProbSharpContext(DbContextOptions<ProbSharpContext> options) : base(options)
+        {
+            Database.Migrate();
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
