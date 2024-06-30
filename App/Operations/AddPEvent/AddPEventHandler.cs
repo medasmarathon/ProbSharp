@@ -1,9 +1,8 @@
 using App.Entities;
 using App.Operations.Interfaces;
-using App.Operations.Requests;
 using ProbSharp.Persistence;
 
-namespace App.Operations;
+namespace App.Operations.AddPEvent;
 
 public class AddPEventHandler : IRequestHandler<AddPEventRequest, PEvent>
 {

@@ -1,17 +1,15 @@
 using App.Entities;
-using App.Operations.Factories;
 using App.Operations.Interfaces;
-using App.Operations.Requests;
 using ProbSharp.Persistence;
 
-namespace App.Operations;
+namespace App.Operations.AddOutcome;
 
 public class AddOutcomeHandler : IRequestHandler<AddOutcomeRequest, Outcome>
 {
     private readonly ProbSharpContext _context;
-    private readonly NodeFactory _nodeFactory;
-    private readonly RelationshipFactory _relationshipFactory;
-    public AddOutcomeHandler(ProbSharpContext context, NodeFactory nodeFactory, RelationshipFactory relationshipFactory)
+    private readonly INodeFactory<AddOutcomeRequest> _nodeFactory;
+    private readonly IRelationshipFactory<AddOutcomeRequest> _relationshipFactory;
+    public AddOutcomeHandler(ProbSharpContext context, INodeFactory<AddOutcomeRequest> nodeFactory, IRelationshipFactory<AddOutcomeRequest> relationshipFactory)
     {
         _context = context;
         _nodeFactory = nodeFactory;
@@ -22,8 +20,8 @@ public class AddOutcomeHandler : IRequestHandler<AddOutcomeRequest, Outcome>
         using var transaction = _context.Database.BeginTransaction();
         try
         {
-            var outcomeNode = _nodeFactory.From(request);
-            var relationship = _relationshipFactory.From(request);
+            var outcomeNode = _nodeFactory.CreateNode(request);
+            var relationship = _relationshipFactory.CreateRelationship(request);
             _context.Nodes.Add(outcomeNode);
             await _context.SaveChangesAsync();
 

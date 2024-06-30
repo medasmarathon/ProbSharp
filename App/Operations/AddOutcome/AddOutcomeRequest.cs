@@ -1,4 +1,4 @@
-namespace App.Operations.Requests;
+namespace App.Operations.AddOutcome;
 
 public class AddOutcomeRequest
 {

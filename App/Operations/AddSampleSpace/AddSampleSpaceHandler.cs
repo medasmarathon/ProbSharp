@@ -1,28 +1,24 @@
 using App.Entities;
-using App.Operations.Factories;
 using App.Operations.Interfaces;
-using App.Operations.Requests;
 using ProbSharp.Persistence;
 
-namespace App.Operations;
+namespace App.Operations.AddSampleSpace;
 
 public class AddSampleSpaceHandler : IRequestHandler<AddSampleSpaceRequest, SampleSpace>
 {
     private readonly ProbSharpContext _context;
-    private readonly NodeFactory _nodeFactory;
-    private readonly RelationshipFactory _relationshipFactory;
-    public AddSampleSpaceHandler(ProbSharpContext context, NodeFactory nodeFactory, RelationshipFactory relationshipFactory)
+    private readonly INodeFactory<AddSampleSpaceRequest> _requestFactory;
+    public AddSampleSpaceHandler(ProbSharpContext context, INodeFactory<AddSampleSpaceRequest> requestFactory)
     {
         _context = context;
-        _nodeFactory = nodeFactory;
-        _relationshipFactory = relationshipFactory;
+        _requestFactory = requestFactory;
     }
     public async Task<SampleSpace> Handle(AddSampleSpaceRequest request)
     {
         using var transaction = _context.Database.BeginTransaction();
         try
         {
-            var ssNode = _nodeFactory.From(request);
+            var ssNode = _requestFactory.CreateNode(request);
             _context.Nodes.Add(ssNode);
             await _context.SaveChangesAsync();
             transaction.Commit();

@@ -1,8 +1,8 @@
 using App.Entities;
-using App.Operations;
-using App.Operations.Factories;
 using App.Operations.Interfaces;
-using App.Operations.Requests;
+using App.Operations.AddOutcome;
+using App.Operations.AddSampleSpace;
+using App.Operations.AddPEvent;
 using Microsoft.EntityFrameworkCore;
 using ProbSharp.Persistence;
 
@@ -23,8 +23,9 @@ builder.Services
     .AddTransient<IRequestHandler<AddPEventRequest, PEvent>, AddPEventHandler>();
 
 builder.Services
-    .AddTransient<NodeFactory>()
-    .AddTransient<RelationshipFactory>();
+    .AddTransient<INodeFactory<AddSampleSpaceRequest>, AddSampleSpaceFactory>()
+    .AddTransient<INodeFactory<AddOutcomeRequest>, AddOutcomeFactory>()
+    .AddTransient<IRelationshipFactory<AddOutcomeRequest>, AddOutcomeFactory>();
 
 var app = builder.Build();
 
