@@ -6,7 +6,7 @@ using ProbSharp.Persistence;
 
 #nullable disable
 
-namespace ProbSharp.Migrations
+namespace ProbSharp.Persistence.Migrations
 {
     [DbContext(typeof(ProbSharpContext))]
     partial class ProbSharpContextModelSnapshot : ModelSnapshot

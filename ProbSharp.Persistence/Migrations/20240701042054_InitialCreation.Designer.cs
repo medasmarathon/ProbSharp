@@ -7,11 +7,11 @@ using ProbSharp.Persistence;
 
 #nullable disable
 
-namespace ProbSharp.Migrations
+namespace ProbSharp.Persistence.Migrations
 {
     [DbContext(typeof(ProbSharpContext))]
-    [Migration("20240629043751_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20240701042054_InitialCreation")]
+    partial class InitialCreation
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

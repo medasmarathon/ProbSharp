@@ -21,8 +21,8 @@ public class TestAddOutcome : BaseDatabaseTest
     {
         var services = serviceCollection.BuildServiceProvider();
         using var scope = services.CreateScope();
-        using var dbContext = scope.ServiceProvider.GetRequiredService<ProbSharpContext>();
-        dbContext.Database.EnsureCreated();
+        var dbContext = scope.ServiceProvider.GetRequiredService<ProbSharpContext>();
+        using var connection = dbContext.Database.GetDbConnection();
         var ssRequest = scope.ServiceProvider.GetRequiredService<IRequestHandler<AddSampleSpaceRequest, SampleSpace>>();
         var outcomeRequest = scope.ServiceProvider.GetRequiredService<IRequestHandler<AddOutcomeRequest, Outcome>>();
 
@@ -34,5 +34,7 @@ public class TestAddOutcome : BaseDatabaseTest
         var insertedOutcome = await dbContext.Nodes.Where(n => n.Id == outcome.Id).FirstOrDefaultAsync();
         insertedSs.Should().NotBeNull();
         insertedOutcome.Should().NotBeNull();
+
+        connection.Close();
     }
 }

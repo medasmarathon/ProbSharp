@@ -1,3 +1,4 @@
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ProbSharp.Persistence;
@@ -11,9 +12,8 @@ namespace App.Tests
         {
             serviceCollection = new ServiceCollection();
             serviceCollection.AddDbContext<ProbSharpContext>(
-                options =>
-                    options.UseSqlite($"DataSource=.\\{this.GetType().Name}"),
-                ServiceLifetime.Singleton
+                options => options
+                    .UseSqlite($"DataSource=.\\{this.GetType().Name}.db", opt => opt.MigrationsAssembly("App.Tests"))
             );
         }
     }

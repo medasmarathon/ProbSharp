@@ -7,11 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProbSharp", "ProbSharp\Prob
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProbSharp.Persistence", "ProbSharp.Persistence\ProbSharp.Persistence.csproj", "{7000C0BF-E62C-4073-B779-0852F14D7F26}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App", "App\App.csproj", "{32DDE63F-C3A7-45A2-A7E8-014E0D57705A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App", "App\App.csproj", "{32DDE63F-C3A7-45A2-A7E8-014E0D57705A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{66B80518-FB96-49EE-983E-B40D96A6A48F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Tests", "App.Tests\App.Tests.csproj", "{A4D6A12F-3415-4A64-8913-39620BE514D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Tests", "App.Tests\App.Tests.csproj", "{A4D6A12F-3415-4A64-8913-39620BE514D2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +35,10 @@ Global
 		{A4D6A12F-3415-4A64-8913-39620BE514D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4D6A12F-3415-4A64-8913-39620BE514D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4D6A12F-3415-4A64-8913-39620BE514D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8E47F6B-D116-45B3-927B-966B7075CB15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8E47F6B-D116-45B3-927B-966B7075CB15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8E47F6B-D116-45B3-927B-966B7075CB15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8E47F6B-D116-45B3-927B-966B7075CB15}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
