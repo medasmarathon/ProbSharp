@@ -13,7 +13,7 @@ namespace App.Tests
             serviceCollection = new ServiceCollection();
             serviceCollection.AddDbContext<ProbSharpContext>(
                 options => options
-                    .UseSqlite($"DataSource=.\\{this.GetType().Name}.db", opt => opt.MigrationsAssembly("App.Tests"))
+                    .UseSqlite($"DataSource=.\\{this.GetType().Name}.db", opt => opt.MigrationsAssembly("ProbSharp.Persistence"))
             );
         }
     }
