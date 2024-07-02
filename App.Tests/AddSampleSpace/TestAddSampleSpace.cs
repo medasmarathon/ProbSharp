@@ -1,5 +1,4 @@
 using App.Entities;
-using App.Operations.AddOutcome;
 using App.Operations.AddSampleSpace;
 using App.Operations.Interfaces;
 using FluentAssertions;
@@ -7,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ProbSharp.Persistence;
 
-namespace App.Tests.AddOutcome;
+namespace App.Tests.AddSampleSpace;
 
-public class TestAddOutcome : BaseAppTest
+public class TestAddSampleSpace : BaseAppTest
 {
     public async override Task InitializeAsync()
     {
@@ -19,21 +18,16 @@ public class TestAddOutcome : BaseAppTest
     }
 
     [Fact]
-    public async Task AddOutcome_Should_BeSuccessful()
+    public async Task AddSampleSpace_Should_BeSuccessful()
     {
         using var scope = services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<ProbSharpContext>();
 
         var ssRequest = scope.ServiceProvider.GetRequiredService<IRequestHandler<AddSampleSpaceRequest, SampleSpace>>();
-        var outcomeRequest = scope.ServiceProvider.GetRequiredService<IRequestHandler<AddOutcomeRequest, Outcome>>();
 
-        var ss = await ssRequest.Handle(new AddSampleSpaceRequest { Name = "Sample SS" });
-        var outcome = await outcomeRequest.Handle(new AddOutcomeRequest { Name = "Sample Outcome", SampleSpaceId = ss.Id });
+        var ss = await ssRequest.Handle(new AddSampleSpaceRequest { Name = "Sample Standalone SS" });
 
         var insertedSs = await dbContext.Nodes.Where(n => n.Id == ss.Id).FirstOrDefaultAsync();
-        var insertedOutcome = await dbContext.Nodes.Where(n => n.Id == outcome.Id).FirstOrDefaultAsync();
         insertedSs.Should().NotBeNull();
-        insertedOutcome.Should().NotBeNull();
     }
-
 }
