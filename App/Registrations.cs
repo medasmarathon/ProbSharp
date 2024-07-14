@@ -37,10 +37,7 @@ public static class Registrations
             ;
 
         serviceCollection
-            .AddTransient<IOperator<AddOutcomeRequest, Outcome>, Operator>()
-            .AddTransient<IOperator<AddSampleSpaceRequest, SampleSpace>, Operator>()
-            .AddTransient<IOperator<AddPEventRequest, PEvent>, Operator>()
-            .AddTransient<IOperator<AddAtomicEventRequest, AtomicEvent>, Operator>()
+            .AddTransient<Operator>()
             ;
     }
 }

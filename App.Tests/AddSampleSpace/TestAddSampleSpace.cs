@@ -1,4 +1,5 @@
 using App.Entities;
+using App.Operations;
 using App.Operations.AddSampleSpace;
 using App.Operations.Interfaces;
 using FluentAssertions;
@@ -23,9 +24,9 @@ public class TestAddSampleSpace : BaseAppTest
         using var scope = services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<ProbSharpContext>();
 
-        var ssRequest = scope.ServiceProvider.GetRequiredService<IRequestHandler<AddSampleSpaceRequest, SampleSpace>>();
+        var appOperator = scope.ServiceProvider.GetRequiredService<Operator>();
 
-        var ss = await ssRequest.Handle(new AddSampleSpaceRequest { Name = "Sample Standalone SS" });
+        var ss = await appOperator.Send(new AddSampleSpaceRequest { Name = "Sample Standalone SS" });
 
         var insertedSs = await dbContext.Nodes.Where(n => n.Id == ss.Id).FirstOrDefaultAsync();
         insertedSs.Should().NotBeNull();
