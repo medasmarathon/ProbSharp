@@ -1,6 +1,8 @@
 using App.Entities;
+using App.Operations;
 using App.Operations.AddOutcome;
 using App.Operations.AddPEvent;
+using App.Operations.AddPEvent.AddAtomicEvent;
 using App.Operations.AddSampleSpace;
 using App.Operations.Interfaces;
 using FluentValidation;
@@ -15,14 +17,30 @@ public static class Registrations
         serviceCollection
             .AddTransient<IRequestHandler<AddSampleSpaceRequest, SampleSpace>, AddSampleSpaceHandler>()
             .AddTransient<IRequestHandler<AddOutcomeRequest, Outcome>, AddOutcomeHandler>()
-            .AddTransient<IRequestHandler<AddPEventRequest, PEvent>, AddPEventHandler>();
+            .AddTransient<IRequestHandler<AddAtomicEventRequest, AtomicEvent>, AddAtomicEventHandler>()
+            .AddTransient<IRequestHandler<AddPEventRequest, PEvent>, AddPEventHandler>()
+            ;
 
         serviceCollection
             .AddTransient<INodeFactory<AddSampleSpaceRequest>, AddSampleSpaceFactory>()
             .AddTransient<INodeFactory<AddOutcomeRequest>, AddOutcomeFactory>()
-            .AddTransient<IRelationshipFactory<AddOutcomeRequest>, AddOutcomeFactory>();
+            .AddTransient<INodeFactory<AddAtomicEventRequest>, AddAtomicEventFactory>()
+            ;
+        
+        serviceCollection
+            .AddTransient<IRelationshipFactory<AddAtomicEventRequest>, AddAtomicEventFactory>()
+            .AddTransient<IRelationshipFactory<AddOutcomeRequest>, AddOutcomeFactory>()
+            ;
 
         serviceCollection
-            .AddScoped<IValidator<AddPEventRequest>, AddPEventRequestValidator>();
+            .AddScoped<IValidator<AddPEventRequest>, AddPEventRequestValidator>()
+            ;
+
+        serviceCollection
+            .AddTransient<IOperator<AddOutcomeRequest, Outcome>, Operator>()
+            .AddTransient<IOperator<AddSampleSpaceRequest, SampleSpace>, Operator>()
+            .AddTransient<IOperator<AddPEventRequest, PEvent>, Operator>()
+            .AddTransient<IOperator<AddAtomicEventRequest, AtomicEvent>, Operator>()
+            ;
     }
 }
