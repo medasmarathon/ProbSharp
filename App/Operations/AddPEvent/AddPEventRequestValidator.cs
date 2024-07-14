@@ -11,8 +11,11 @@ public class AddPEventRequestValidator : AbstractValidator<AddPEventRequest>
     {
         RuleFor(r => r.Outcome).Must((request, outcome) =>
         {
-            if (request.EventType == PEventType.Atomic)
-                return outcome is not null;
+            var isAtomic = request.EventType == PEventType.Atomic;
+            if (isAtomic && outcome is null)
+                return false;
+            if (isAtomic && outcome!.SampleSpace is not null && outcome.SampleSpace.Id != request.SampleSpaceId)
+                return false;
             return true;
         });
         RuleFor(r => r.SubEvents).Must((request, subEvents) =>

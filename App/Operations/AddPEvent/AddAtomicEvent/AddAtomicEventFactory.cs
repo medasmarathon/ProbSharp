@@ -10,10 +10,12 @@ public class AddAtomicEventFactory : INodeFactory<AddAtomicEventRequest>, IRelat
     {
         var eventNode = new Node
         {
-            Label = Constants.NodeLabel.Outcome,
+            Label = Constants.NodeLabel.Event,
             Attributes = JsonSerializer.Serialize(new
             {
                 request.Name,
+                request.EventType,
+                request.Probability
             })
         };
         return [eventNode];
@@ -26,6 +28,12 @@ public class AddAtomicEventFactory : INodeFactory<AddAtomicEventRequest>, IRelat
             Kind = Constants.RelationshipKind.HasEvent,
             OwnerId = request.SampleSpaceId,
             Attributes = JsonSerializer.Serialize(new {})
+        };
+        var relationshipOfOutcome = new Relationship
+        {
+            Kind = Constants.RelationshipKind.HasEvent,
+            OwnerId = request.Outcome.Id,
+            Attributes = JsonSerializer.Serialize(new { })
         };
         return [relationshipOfSampleSpace];
     }
