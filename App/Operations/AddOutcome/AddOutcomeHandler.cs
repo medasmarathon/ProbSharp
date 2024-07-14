@@ -4,30 +4,21 @@ using ProbSharp.Persistence;
 
 namespace App.Operations.AddOutcome;
 
-public class AddOutcomeHandler : IRequestHandler<AddOutcomeRequest, Outcome>
+public class AddOutcomeHandler(ProbSharpContext context, INodeFactory<AddOutcomeRequest> nodeFactory, IRelationshipFactory<AddOutcomeRequest> relationshipFactory) : IRequestHandler<AddOutcomeRequest, Outcome>
 {
-    private readonly ProbSharpContext _context;
-    private readonly INodeFactory<AddOutcomeRequest> _nodeFactory;
-    private readonly IRelationshipFactory<AddOutcomeRequest> _relationshipFactory;
-    public AddOutcomeHandler(ProbSharpContext context, INodeFactory<AddOutcomeRequest> nodeFactory, IRelationshipFactory<AddOutcomeRequest> relationshipFactory)
-    {
-        _context = context;
-        _nodeFactory = nodeFactory;
-        _relationshipFactory = relationshipFactory;
-    }
     public async Task<Outcome> Handle(AddOutcomeRequest request)
     {
-        using var transaction = _context.Database.BeginTransaction();
+        using var transaction = context.Database.BeginTransaction();
         try
         {
-            var outcomeNode = _nodeFactory.CreateNode(request);
-            var relationship = _relationshipFactory.CreateRelationship(request);
-            _context.Nodes.Add(outcomeNode);
-            await _context.SaveChangesAsync();
+            var outcomeNode = nodeFactory.CreateNode(request);
+            var relationship = relationshipFactory.CreateRelationship(request);
+            context.Nodes.Add(outcomeNode);
+            await context.SaveChangesAsync();
 
             relationship.RelatedId = outcomeNode.Id;
-            _context.Relationships.Add(relationship);
-            await _context.SaveChangesAsync();
+            context.Relationships.Add(relationship);
+            await context.SaveChangesAsync();
             transaction.Commit();
 
             return new()
@@ -42,6 +33,7 @@ public class AddOutcomeHandler : IRequestHandler<AddOutcomeRequest, Outcome>
         }
         catch (Exception ex)
         {
+            transaction.Rollback();
             throw new ApplicationException("Error inserting Outcome", ex);
         }
         

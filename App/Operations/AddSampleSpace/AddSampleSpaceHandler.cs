@@ -4,23 +4,16 @@ using ProbSharp.Persistence;
 
 namespace App.Operations.AddSampleSpace;
 
-public class AddSampleSpaceHandler : IRequestHandler<AddSampleSpaceRequest, SampleSpace>
+public class AddSampleSpaceHandler(ProbSharpContext context, INodeFactory<AddSampleSpaceRequest> nodeFactory) : IRequestHandler<AddSampleSpaceRequest, SampleSpace>
 {
-    private readonly ProbSharpContext _context;
-    private readonly INodeFactory<AddSampleSpaceRequest> _requestFactory;
-    public AddSampleSpaceHandler(ProbSharpContext context, INodeFactory<AddSampleSpaceRequest> requestFactory)
-    {
-        _context = context;
-        _requestFactory = requestFactory;
-    }
     public async Task<SampleSpace> Handle(AddSampleSpaceRequest request)
     {
-        using var transaction = _context.Database.BeginTransaction();
+        using var transaction = context.Database.BeginTransaction();
         try
         {
-            var ssNode = _requestFactory.CreateNode(request);
-            _context.Nodes.Add(ssNode);
-            await _context.SaveChangesAsync();
+            var ssNode = nodeFactory.CreateNode(request);
+            context.Nodes.Add(ssNode);
+            await context.SaveChangesAsync();
             transaction.Commit();
 
             return new()
@@ -31,6 +24,7 @@ public class AddSampleSpaceHandler : IRequestHandler<AddSampleSpaceRequest, Samp
         }
         catch (Exception ex)
         {
+            transaction.Rollback();
             throw new ApplicationException("Error inserting Sample Space", ex);
         }
     }
