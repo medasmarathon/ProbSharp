@@ -3,6 +3,7 @@ using App.Operations.AddOutcome;
 using App.Operations.AddPEvent;
 using App.Operations.AddSampleSpace;
 using App.Operations.Interfaces;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace App;
@@ -20,5 +21,8 @@ public static class Registrations
             .AddTransient<INodeFactory<AddSampleSpaceRequest>, AddSampleSpaceFactory>()
             .AddTransient<INodeFactory<AddOutcomeRequest>, AddOutcomeFactory>()
             .AddTransient<IRelationshipFactory<AddOutcomeRequest>, AddOutcomeFactory>();
+
+        serviceCollection
+            .AddScoped<IValidator<AddPEventRequest>, AddPEventRequestValidator>();
     }
 }
