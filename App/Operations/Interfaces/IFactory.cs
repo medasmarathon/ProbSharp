@@ -4,11 +4,11 @@ namespace App.Operations.Interfaces;
 
 public interface INodeFactory<TRequest>
 {
-    Node CreateNode(TRequest request);
+    List<Node> CreateNodes(TRequest request);
 }
 
 public interface IRelationshipFactory<TRequest>
 {
-    Relationship CreateRelationship(TRequest request);
+    List<Relationship> CreateRelationships(TRequest request);
 }
 

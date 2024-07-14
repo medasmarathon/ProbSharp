@@ -6,7 +6,7 @@ namespace App.Operations.AddOutcome;
 
 public class AddOutcomeFactory : INodeFactory<AddOutcomeRequest>, IRelationshipFactory<AddOutcomeRequest>
 {
-    public Node CreateNode(AddOutcomeRequest request)
+    public List<Node> CreateNodes(AddOutcomeRequest request)
     {
         var outcomeNode = new Node
         {
@@ -16,10 +16,10 @@ public class AddOutcomeFactory : INodeFactory<AddOutcomeRequest>, IRelationshipF
                 request.Name,
             })
         };
-        return outcomeNode;
+        return [ outcomeNode ];
     }
 
-    public Relationship CreateRelationship(AddOutcomeRequest request)
+    public List<Relationship> CreateRelationships(AddOutcomeRequest request)
     {
         var relationshipOfSampleSpace = new Relationship
         {
@@ -27,7 +27,7 @@ public class AddOutcomeFactory : INodeFactory<AddOutcomeRequest>, IRelationshipF
             OwnerId = request.SampleSpaceId,
             Attributes = JsonSerializer.Serialize(new {})
         };
-        return relationshipOfSampleSpace;
+        return [ relationshipOfSampleSpace ];
     }
 
 }

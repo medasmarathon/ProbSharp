@@ -11,23 +11,23 @@ public class AddOutcomeHandler(ProbSharpContext context, INodeFactory<AddOutcome
         using var transaction = context.Database.BeginTransaction();
         try
         {
-            var outcomeNode = nodeFactory.CreateNode(request);
-            var relationship = relationshipFactory.CreateRelationship(request);
-            context.Nodes.Add(outcomeNode);
+            var outcomeNodes = nodeFactory.CreateNodes(request);
+            var relationships = relationshipFactory.CreateRelationships(request);
+            context.Nodes.AddRange(outcomeNodes);
             await context.SaveChangesAsync();
 
-            relationship.RelatedId = outcomeNode.Id;
-            context.Relationships.Add(relationship);
+            relationships.First().RelatedId = outcomeNodes.First().Id;
+            context.Relationships.AddRange(relationships);
             await context.SaveChangesAsync();
             transaction.Commit();
 
             return new()
             {
-                Id = outcomeNode.Id,
+                Id = outcomeNodes.First().Id,
                 Name = request.Name,
                 SampleSpace = new()
                 {
-                    Id = relationship.OwnerId,
+                    Id = relationships.First().OwnerId,
                 }
             };
         }

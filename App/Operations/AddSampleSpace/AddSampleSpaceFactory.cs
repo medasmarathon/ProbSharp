@@ -6,7 +6,7 @@ namespace App.Operations.AddSampleSpace;
 
 public class AddSampleSpaceFactory : INodeFactory<AddSampleSpaceRequest>
 {
-    public Node CreateNode(AddSampleSpaceRequest request)
+    public List<Node> CreateNodes(AddSampleSpaceRequest request)
     {
         var ssNode = new Node
         {
@@ -16,7 +16,7 @@ public class AddSampleSpaceFactory : INodeFactory<AddSampleSpaceRequest>
                 request.Name,
             })
         };
-        return ssNode;
+        return [ssNode];
     }
 
 }

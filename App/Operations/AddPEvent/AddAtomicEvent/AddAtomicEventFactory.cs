@@ -6,7 +6,7 @@ namespace App.Operations.AddPEvent.AddAtomicEvent;
 
 public class AddAtomicEventFactory : INodeFactory<AddAtomicEventRequest>, IRelationshipFactory<AddAtomicEventRequest>
 {
-    public Node CreateNode(AddAtomicEventRequest request)
+    public List<Node> CreateNodes(AddAtomicEventRequest request)
     {
         var eventNode = new Node
         {
@@ -16,10 +16,10 @@ public class AddAtomicEventFactory : INodeFactory<AddAtomicEventRequest>, IRelat
                 request.Name,
             })
         };
-        return eventNode;
+        return [eventNode];
     }
 
-    public Relationship CreateRelationship(AddAtomicEventRequest request)
+    public List<Relationship> CreateRelationships(AddAtomicEventRequest request)
     {
         var relationshipOfSampleSpace = new Relationship
         {
@@ -27,7 +27,7 @@ public class AddAtomicEventFactory : INodeFactory<AddAtomicEventRequest>, IRelat
             OwnerId = request.SampleSpaceId,
             Attributes = JsonSerializer.Serialize(new {})
         };
-        return relationshipOfSampleSpace;
+        return [relationshipOfSampleSpace];
     }
 
 }

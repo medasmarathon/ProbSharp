@@ -11,14 +11,14 @@ public class AddSampleSpaceHandler(ProbSharpContext context, INodeFactory<AddSam
         using var transaction = context.Database.BeginTransaction();
         try
         {
-            var ssNode = nodeFactory.CreateNode(request);
-            context.Nodes.Add(ssNode);
+            var ssNodes = nodeFactory.CreateNodes(request);
+            context.Nodes.AddRange(ssNodes);
             await context.SaveChangesAsync();
             transaction.Commit();
 
             return new()
             {
-                Id = ssNode.Id,
+                Id = ssNodes.First().Id,
                 Name = request.Name,
             };
         }
