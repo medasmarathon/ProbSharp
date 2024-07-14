@@ -14,22 +14,28 @@ public class AddPEventHandler(ProbSharpContext context, IValidator<AddPEventRequ
         validator.ValidateAndThrow(request);
         if (request.EventType == PEventType.Atomic)
         {
-            if (request.Outcome!.Id == 0)
-            {
-                request.Outcome = await appOperator.Send(new AddOutcomeRequest
-                {
-                    Name = request.Outcome.Name,
-                    SampleSpaceId = request.SampleSpaceId
-                });
-            }
-            var atomicRequest = new AddAtomicEventRequest() {
-                Name = request.Name,
-                Probability = request.Probability,
-                SampleSpaceId = request.SampleSpaceId,
-                Outcome = request.Outcome!
-            };
-            return await appOperator.Send(atomicRequest);
+            return await AddAtomicEvent(request);
         }
         return default;
+    }
+
+    private async Task<AtomicEvent> AddAtomicEvent(AddPEventRequest request)
+    {
+        if (request.Outcome!.Id == 0)
+        {
+            request.Outcome = await appOperator.Send(new AddOutcomeRequest
+            {
+                Name = request.Outcome.Name,
+                SampleSpaceId = request.SampleSpaceId
+            });
+        }
+        var atomicRequest = new AddAtomicEventRequest()
+        {
+            Name = request.Name,
+            Probability = request.Probability,
+            SampleSpaceId = request.SampleSpaceId,
+            Outcome = request.Outcome!
+        };
+        return await appOperator.Send(atomicRequest);
     }
 }
