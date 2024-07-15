@@ -35,7 +35,7 @@ public class AddAtomicEventFactory : INodeFactory<AddAtomicEventRequest>, IRelat
             OwnerId = request.Outcome.Id,
             Attributes = JsonSerializer.Serialize(new { })
         };
-        return [relationshipOfSampleSpace];
+        return [relationshipOfSampleSpace, relationshipOfOutcome];
     }
 
 }
