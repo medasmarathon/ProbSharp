@@ -42,9 +42,9 @@ public class TestAddAtomicEvent : BaseAppTest
 
         var insertedAtomicEvent = await dbContext.Nodes.Where(n => n.Id == atomicEvent.Id).FirstOrDefaultAsync();
         insertedAtomicEvent.Should().NotBeNull();
-        var attributeJson = JsonNode.Parse(insertedAtomicEvent.Attributes);
-        attributeJson["Probability"].Should().NotBeNull();
-        attributeJson["Probability"].ToString().Should().Be("0.5");
+        var attributeJson = JsonNode.Parse(insertedAtomicEvent!.Attributes ?? "{}");
+        attributeJson?["Probability"].Should().NotBeNull();
+        attributeJson?["Probability"]?.ToString().Should().Be("0.5");
 
         var relationships = await dbContext.Relationships.Where(r => r.RelatedId == atomicEvent.Id).ToListAsync();
         relationships.Should().Contain(r => r.OwnerId == ss.Id && r.Kind == Constants.RelationshipKind.HasEvent);
