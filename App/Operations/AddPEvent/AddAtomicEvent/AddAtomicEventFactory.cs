@@ -21,19 +21,22 @@ public class AddAtomicEventFactory : INodeFactory<AddAtomicEventRequest>, IRelat
         return [eventNode];
     }
 
-    public List<Relationship> CreateRelationships(AddAtomicEventRequest request)
+    public List<Relationship> CreateOwningRelationships(AddAtomicEventRequest request)
+    {
+        throw new NotImplementedException();
+    }
+
+    public List<Relationship> CreateRelatedRelationships(AddAtomicEventRequest request)
     {
         var relationshipOfSampleSpace = new Relationship
         {
             Kind = Constants.RelationshipKind.HasEvent,
-            OwnerId = request.SampleSpaceId,
-            Attributes = JsonSerializer.Serialize(new {})
+            OwnerId = request.SampleSpaceId
         };
         var relationshipOfOutcome = new Relationship
         {
             Kind = Constants.RelationshipKind.HasEvent,
-            OwnerId = request.Outcome.Id,
-            Attributes = JsonSerializer.Serialize(new { })
+            OwnerId = request.Outcome.Id
         };
         return [relationshipOfSampleSpace, relationshipOfOutcome];
     }

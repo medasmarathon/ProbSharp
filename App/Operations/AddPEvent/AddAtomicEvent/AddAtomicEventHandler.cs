@@ -16,7 +16,7 @@ public class AddAtomicEventHandler(
         try
         {
             var atomicNodes = nodeFactory.CreateNodes(request);
-            var relationships = relationshipFactory.CreateRelationships(request);
+            var relationships = relationshipFactory.CreateRelatedRelationships(request);
             context.Nodes.AddRange(atomicNodes);
             await context.SaveChangesAsync();
 

@@ -21,13 +21,25 @@ public class AddAndEventFactory : INodeFactory<AddAndEventRequest>, IRelationshi
         return [eventNode];
     }
 
-    public List<Relationship> CreateRelationships(AddAndEventRequest request)
+    public List<Relationship> CreateOwningRelationships(AddAndEventRequest request)
+    {
+        var relationshipsToSubEvents = request.SubEvents.Select(se =>
+        {
+            return new Relationship
+            {
+                Kind = Constants.RelationshipKind.HasSubEvent,
+                RelatedId = se.Id
+            };
+        });
+        return relationshipsToSubEvents.ToList();
+    }
+
+    public List<Relationship> CreateRelatedRelationships(AddAndEventRequest request)
     {
         var relationshipOfSampleSpace = new Relationship
         {
             Kind = Constants.RelationshipKind.HasEvent,
-            OwnerId = request.SampleSpaceId,
-            Attributes = JsonSerializer.Serialize(new {})
+            OwnerId = request.SampleSpaceId
         };
         return [relationshipOfSampleSpace];
     }

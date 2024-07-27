@@ -9,6 +9,7 @@ public interface INodeFactory<TRequest>
 
 public interface IRelationshipFactory<TRequest>
 {
-    List<Relationship> CreateRelationships(TRequest request);
+    List<Relationship> CreateRelatedRelationships(TRequest request);
+    List<Relationship> CreateOwningRelationships(TRequest request);
 }
 

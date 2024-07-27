@@ -16,15 +16,21 @@ public class AddAndEventHandler(
         try
         {
             var andNodes = nodeFactory.CreateNodes(request);
-            var relationships = relationshipFactory.CreateRelationships(request);
             context.Nodes.AddRange(andNodes);
             await context.SaveChangesAsync();
 
-            relationships.ForEach(r =>
+            var relatedRelationships = relationshipFactory.CreateRelatedRelationships(request);
+            relatedRelationships.ForEach(r =>
             {
                 r.RelatedId = andNodes.First().Id;
             });
-            context.Relationships.AddRange(relationships);
+            
+            var owningRelationships = relationshipFactory.CreateOwningRelationships(request);
+            owningRelationships.ForEach(r =>
+            {
+                r.OwnerId = andNodes.First().Id;
+            });
+            context.Relationships.AddRange([ ..relatedRelationships, ..owningRelationships]);
             await context.SaveChangesAsync();
             transaction.Commit();
 

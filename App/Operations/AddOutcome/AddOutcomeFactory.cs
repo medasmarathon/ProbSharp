@@ -19,13 +19,17 @@ public class AddOutcomeFactory : INodeFactory<AddOutcomeRequest>, IRelationshipF
         return [ outcomeNode ];
     }
 
-    public List<Relationship> CreateRelationships(AddOutcomeRequest request)
+    public List<Relationship> CreateOwningRelationships(AddOutcomeRequest request)
+    {
+        throw new NotImplementedException();
+    }
+
+    public List<Relationship> CreateRelatedRelationships(AddOutcomeRequest request)
     {
         var relationshipOfSampleSpace = new Relationship
         {
             Kind = Constants.RelationshipKind.HasOutcome,
-            OwnerId = request.SampleSpaceId,
-            Attributes = JsonSerializer.Serialize(new {})
+            OwnerId = request.SampleSpaceId
         };
         return [ relationshipOfSampleSpace ];
     }

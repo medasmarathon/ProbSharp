@@ -1,4 +1,6 @@
-﻿namespace ProbSharp.Persistence
+﻿using System.Text.Json;
+
+namespace ProbSharp.Persistence
 {
     public class Relationship
     {
@@ -8,6 +10,6 @@
         public Node Owner { get; set; }
         public long RelatedId { get; set; }
         public Node Related { get; set; }
-        public string Attributes { get; set; }
+        public string Attributes { get; set; } = JsonSerializer.Serialize(new {});
     }
 }

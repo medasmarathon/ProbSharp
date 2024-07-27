@@ -12,7 +12,7 @@ public class AddOutcomeHandler(ProbSharpContext context, INodeFactory<AddOutcome
         try
         {
             var outcomeNodes = nodeFactory.CreateNodes(request);
-            var relationships = relationshipFactory.CreateRelationships(request);
+            var relationships = relationshipFactory.CreateRelatedRelationships(request);
             context.Nodes.AddRange(outcomeNodes);
             await context.SaveChangesAsync();
 
