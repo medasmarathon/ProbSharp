@@ -36,5 +36,6 @@ public class AddPEventRequestValidator : AbstractValidator<AddPEventRequest>
                 return subjectEv is not null;
             return true;
         });
+        RuleFor(r => r.SampleSpaceId).NotNull().NotEqual(0);
     }
 }
