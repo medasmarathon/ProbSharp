@@ -2,6 +2,7 @@ using App.Entities;
 using App.Operations.AddOutcome;
 using App.Operations.AddPEvent;
 using App.Operations.AddPEvent.AddAndEvent;
+using App.Operations.AddPEvent.AddOrEvent;
 using App.Operations.AddPEvent.AddAtomicEvent;
 using App.Operations.AddSampleSpace;
 using App.Operations.Interfaces;
@@ -27,4 +28,7 @@ public class Operator(
     
     public async Task<AndEvent> Send(AddAndEventRequest request) => 
         await services.GetRequiredService<IRequestHandler<AddAndEventRequest, AndEvent>>().Handle(request);
+        
+    public async Task<OrEvent> Send(AddOrEventRequest request) => 
+        await services.GetRequiredService<IRequestHandler<AddOrEventRequest, OrEvent>>().Handle(request);
 }
