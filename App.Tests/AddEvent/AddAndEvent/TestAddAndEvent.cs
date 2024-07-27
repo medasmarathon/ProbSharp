@@ -49,10 +49,11 @@ public class TestAddAndEvent : BaseAppTest
         });
         var andEvent = await appOperator.Send(new AddPEventRequest
         {
-            Name = "Event 2",
+            Name = "And Event",
             EventType = PEventType.And,
             SubEvents = [event1, event2],
-            Probability = 0.2m
+            Probability = 0.2m,
+            SampleSpaceId = ss.Id
         });
 
         var insertedAndEvent = await dbContext.Nodes.Where(n => n.Id == andEvent.Id).FirstOrDefaultAsync();
