@@ -1,24 +1,25 @@
 using App.Entities;
 using App.Operations.Interfaces;
+using Mediator;
 using ProbSharp.Persistence;
 
 namespace App.Operations.AddSampleSpace;
 
 public class AddSampleSpaceHandler(ProbSharpContext context, INodeFactory<AddSampleSpaceRequest> nodeFactory) : IRequestHandler<AddSampleSpaceRequest, SampleSpace>
 {
-    public async Task<SampleSpace> Handle(AddSampleSpaceRequest request)
+    public async ValueTask<SampleSpace> Handle(AddSampleSpaceRequest request, CancellationToken token = default)
     {
-        using var transaction = context.Database.BeginTransaction();
+        await using var transaction = context.Database.BeginTransaction();
         try
         {
             var ssNodes = nodeFactory.CreateNodes(request);
             context.Nodes.AddRange(ssNodes);
-            await context.SaveChangesAsync();
+            await context.SaveChangesAsync(token);
             transaction.Commit();
 
             return new()
             {
-                Id = ssNodes.First().Id,
+                Id = ssNodes[0].Id,
                 Name = request.Name,
             };
         }

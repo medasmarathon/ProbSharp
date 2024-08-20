@@ -1,33 +1,34 @@
 using App.Entities;
 using App.Operations.Interfaces;
+using Mediator;
 using ProbSharp.Persistence;
 
 namespace App.Operations.AddOutcome;
 
 public class AddOutcomeHandler(ProbSharpContext context, INodeFactory<AddOutcomeRequest> nodeFactory, IRelationshipFactory<AddOutcomeRequest> relationshipFactory) : IRequestHandler<AddOutcomeRequest, Outcome>
 {
-    public async Task<Outcome> Handle(AddOutcomeRequest request)
+    public async ValueTask<Outcome> Handle(AddOutcomeRequest request, CancellationToken token = default)
     {
-        using var transaction = context.Database.BeginTransaction();
+        await using var transaction = context.Database.BeginTransaction();
         try
         {
             var outcomeNodes = nodeFactory.CreateNodes(request);
             var relationships = relationshipFactory.CreateRelatedRelationships(request);
             context.Nodes.AddRange(outcomeNodes);
-            await context.SaveChangesAsync();
+            await context.SaveChangesAsync(token);
 
-            relationships.First().RelatedId = outcomeNodes.First().Id;
+            relationships[0].RelatedId = outcomeNodes[0].Id;
             context.Relationships.AddRange(relationships);
-            await context.SaveChangesAsync();
+            await context.SaveChangesAsync(token);
             transaction.Commit();
 
             return new()
             {
-                Id = outcomeNodes.First().Id,
+                Id = outcomeNodes[0].Id,
                 Name = request.Name,
                 SampleSpace = new()
                 {
-                    Id = relationships.First().OwnerId,
+                    Id = relationships[0].OwnerId,
                 }
             };
         }
@@ -36,6 +37,7 @@ public class AddOutcomeHandler(ProbSharpContext context, INodeFactory<AddOutcome
             transaction.Rollback();
             throw new ApplicationException("Error inserting Outcome", ex);
         }
-        
+
     }
+
 }

@@ -1,5 +1,6 @@
 using App.Entities;
 using App.Operations.Interfaces;
+using Mediator;
 using ProbSharp.Persistence;
 
 namespace App.Operations.AddPEvent.AddAtomicEvent;
@@ -10,7 +11,7 @@ public class AddAtomicEventHandler(
         IRelationshipFactory<AddAtomicEventRequest> relationshipFactory
     ) : IRequestHandler<AddAtomicEventRequest, AtomicEvent>
 {
-    public async Task<AtomicEvent> Handle(AddAtomicEventRequest request)
+    public async ValueTask<AtomicEvent> Handle(AddAtomicEventRequest request, CancellationToken token = default)
     {
         using var transaction = context.Database.BeginTransaction();
         try
@@ -18,24 +19,21 @@ public class AddAtomicEventHandler(
             var atomicNodes = nodeFactory.CreateNodes(request);
             var relationships = relationshipFactory.CreateRelatedRelationships(request);
             context.Nodes.AddRange(atomicNodes);
-            await context.SaveChangesAsync();
+            await context.SaveChangesAsync(token);
 
-            relationships.ForEach(r =>
-            {
-                r.RelatedId = atomicNodes.First().Id;
-            });
+            relationships.ForEach(r => r.RelatedId = atomicNodes[0].Id);
             context.Relationships.AddRange(relationships);
-            await context.SaveChangesAsync();
+            await context.SaveChangesAsync(token);
             transaction.Commit();
 
             return new()
             {
-                Id = atomicNodes.First().Id,
+                Id = atomicNodes[0].Id,
                 Name = request.Name,
                 Probability = request.Probability,
                 Outcome = new()
                 {
-                    Id = relationships.First().OwnerId,
+                    Id = relationships[0].OwnerId,
                 }
             };
         }

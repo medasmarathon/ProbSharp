@@ -1,8 +1,9 @@
 using App.Entities;
+using Mediator;
 
 namespace App.Operations.AddPEvent.AddAtomicEvent;
 
-public class AddAtomicEventRequest
+public class AddAtomicEventRequest : IRequest<AtomicEvent>
 {
     public string Name { get; set; } = string.Empty;
     public long SampleSpaceId { get; set; }

@@ -5,6 +5,7 @@ using App.Operations.AddOutcome;
 using App.Operations.AddPEvent;
 using App.Operations.AddSampleSpace;
 using FluentAssertions;
+using Mediator;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ProbSharp.Persistence;
@@ -26,12 +27,12 @@ public class TestAddAndEvent : BaseAppTest
         using var scope = services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<ProbSharpContext>();
 
-        var appOperator = scope.ServiceProvider.GetRequiredService<Operator>();
+        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
-        var ss = await appOperator.Send(new AddSampleSpaceRequest { Name = "Sample SS" });
-        var outcome1 = await appOperator.Send(new AddOutcomeRequest { Name = "Outcome 1", SampleSpaceId = ss.Id });
-        var outcome2 = await appOperator.Send(new AddOutcomeRequest { Name = "Outcome 2", SampleSpaceId = ss.Id });
-        var event1 = await appOperator.Send(new AddPEventRequest
+        var ss = await mediator.Send(new AddSampleSpaceRequest { Name = "Sample SS" });
+        var outcome1 = await mediator.Send(new AddOutcomeRequest { Name = "Outcome 1", SampleSpaceId = ss.Id });
+        var outcome2 = await mediator.Send(new AddOutcomeRequest { Name = "Outcome 2", SampleSpaceId = ss.Id });
+        var event1 = await mediator.Send(new AddPEventRequest
         {
             Name = "Event 1",
             EventType = PEventType.Atomic,
@@ -39,7 +40,7 @@ public class TestAddAndEvent : BaseAppTest
             SampleSpaceId = ss.Id,
             Probability = 0.5m
         });
-        var event2 = await appOperator.Send(new AddPEventRequest
+        var event2 = await mediator.Send(new AddPEventRequest
         {
             Name = "Event 2",
             EventType = PEventType.Atomic,
@@ -47,7 +48,7 @@ public class TestAddAndEvent : BaseAppTest
             SampleSpaceId = ss.Id,
             Probability = 0.5m
         });
-        var andEvent = await appOperator.Send(new AddPEventRequest
+        var andEvent = await mediator.Send(new AddPEventRequest
         {
             Name = "And Event",
             EventType = PEventType.And,

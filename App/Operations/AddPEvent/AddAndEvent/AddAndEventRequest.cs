@@ -1,8 +1,9 @@
 using App.Entities;
+using Mediator;
 
 namespace App.Operations.AddPEvent.AddAndEvent;
 
-public class AddAndEventRequest
+public class AddAndEventRequest : IRequest<AndEvent>
 {
     public string Name { get; set; } = string.Empty;
     public long SampleSpaceId { get; set; }
