@@ -1,19 +1,20 @@
 using App.Entities;
+using App.Operations.Common;
 using App.Operations.Interfaces;
 using Mediator;
 using ProbSharp.Persistence;
 
 namespace App.Operations.AddOutcome;
 
-public class AddOutcomeHandler(ProbSharpContext context, INodeFactory<AddOutcomeRequest> nodeFactory, IRelationshipFactory<AddOutcomeRequest> relationshipFactory) : IRequestHandler<AddOutcomeRequest, Outcome>
+public class AddOutcomeHandler(ProbSharpContext context, IMediator mediator) : IRequestHandler<AddOutcomeRequest, Outcome>
 {
     public async ValueTask<Outcome> Handle(AddOutcomeRequest request, CancellationToken token = default)
     {
         await using var transaction = context.Database.BeginTransaction();
         try
         {
-            var outcomeNodes = nodeFactory.CreateNodes(request);
-            var relationships = relationshipFactory.CreateRelatedRelationships(request);
+            var outcomeNodes = await mediator.Send(new CreateNodesForAddOutcomeRequest(request), token);
+            var relationships = await mediator.Send(new CreateRelatedRelationshipsForAddOutcomeRequest(request), token);
             context.Nodes.AddRange(outcomeNodes);
             await context.SaveChangesAsync(token);
 

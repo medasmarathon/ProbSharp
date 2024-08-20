@@ -1,4 +1,5 @@
 using App.Entities;
+using App.Operations.Common;
 using App.Operations.Interfaces;
 using Mediator;
 using ProbSharp.Persistence;
@@ -7,8 +8,7 @@ namespace App.Operations.AddPEvent.AddAndEvent;
 
 public class AddAndEventHandler(
         ProbSharpContext context,
-        INodeFactory<AddAndEventRequest> nodeFactory, 
-        IRelationshipFactory<AddAndEventRequest> relationshipFactory
+        IMediator mediator
     ) : IRequestHandler<AddAndEventRequest, AndEvent>
 {
     public async ValueTask<AndEvent> Handle(AddAndEventRequest request, CancellationToken token = default)
@@ -16,14 +16,14 @@ public class AddAndEventHandler(
         using var transaction = context.Database.BeginTransaction();
         try
         {
-            var andNodes = nodeFactory.CreateNodes(request);
+            var andNodes = await mediator.Send(new CreateNodesForAddAndEventRequest(request), token);
             context.Nodes.AddRange(andNodes);
             await context.SaveChangesAsync(token);
 
-            var relatedRelationships = relationshipFactory.CreateRelatedRelationships(request);
+            var relatedRelationships = await mediator.Send(new CreateRelatedRelationshipsForAddAndEventRequest(request), token);
             relatedRelationships.ForEach(r => r.RelatedId = andNodes[0].Id);
 
-            var owningRelationships = relationshipFactory.CreateOwningRelationships(request);
+            var owningRelationships = await mediator.Send(new CreateOwningRelationshipsForAddAndEventRequest(request), token);
             owningRelationships.ForEach(r => r.OwnerId = andNodes[0].Id);
             context.Relationships.AddRange([ ..relatedRelationships, ..owningRelationships]);
             await context.SaveChangesAsync(token);

@@ -1,4 +1,5 @@
 using App.Entities;
+using App.Operations.Common;
 using App.Operations.Interfaces;
 using Mediator;
 using ProbSharp.Persistence;
@@ -7,17 +8,16 @@ namespace App.Operations.AddPEvent.AddAtomicEvent;
 
 public class AddAtomicEventHandler(
         ProbSharpContext context,
-        INodeFactory<AddAtomicEventRequest> nodeFactory, 
-        IRelationshipFactory<AddAtomicEventRequest> relationshipFactory
+        IMediator mediator
     ) : IRequestHandler<AddAtomicEventRequest, AtomicEvent>
 {
     public async ValueTask<AtomicEvent> Handle(AddAtomicEventRequest request, CancellationToken token = default)
     {
-        using var transaction = context.Database.BeginTransaction();
+        await using var transaction = context.Database.BeginTransaction();
         try
         {
-            var atomicNodes = nodeFactory.CreateNodes(request);
-            var relationships = relationshipFactory.CreateRelatedRelationships(request);
+            var atomicNodes = await mediator.Send(new CreateNodesForAddAtomicEventRequest(request), token);
+            var relationships = await mediator.Send(new CreateRelatedRelationshipsForAddAtomicEventRequest(request), token);
             context.Nodes.AddRange(atomicNodes);
             await context.SaveChangesAsync(token);
 
