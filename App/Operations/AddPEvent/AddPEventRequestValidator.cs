@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using App.Entities;
-using App.Operations.Interfaces;
 using FluentValidation;
 
 namespace App.Operations.AddPEvent;
