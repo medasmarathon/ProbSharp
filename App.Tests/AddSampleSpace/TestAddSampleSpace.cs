@@ -1,7 +1,6 @@
 using App.Entities;
 using App.Operations;
 using App.Operations.AddSampleSpace;
-using App.Operations.Interfaces;
 using FluentAssertions;
 using Mediator;
 using Microsoft.EntityFrameworkCore;
